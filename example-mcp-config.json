@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "autocad-sdk": {
+      "command": "/path/to/your/project/venv/bin/python",
+      "args": ["-m", "server.mcp_server"],
+      "cwd": "/path/to/your/project",
+      "env": { "PYTHONPATH": "/path/to/your/project" }
+    }
+  }
+}
