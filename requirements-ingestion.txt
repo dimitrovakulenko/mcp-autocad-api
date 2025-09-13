@@ -1,0 +1,25 @@
+# Ingestion Pipeline Dependencies (heavy)
+# Only needed to build the search indices from CHM files
+
+# Core MCP protocol
+mcp>=1.0.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Vector search and embeddings
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.2
+
+# Text processing and BM25
+rank-bm25>=0.2.2
+beautifulsoup4>=4.12.2
+lxml>=4.9.3
+
+# General utilities
+numpy>=1.24.0
+tqdm>=4.65.0
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

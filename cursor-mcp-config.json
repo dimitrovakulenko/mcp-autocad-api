@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "autocad-sdk": {
+      "command": "/Users/dmytrovakulenko/Projects/mcp-autocad-api/venv/bin/python",
+      "args": ["-m", "server.mcp_server"],
+      "cwd": "/Users/dmytrovakulenko/Projects/mcp-autocad-api",
+      "env": { "PYTHONPATH": "/Users/dmytrovakulenko/Projects/mcp-autocad-api" }
+    }
+  }
+}

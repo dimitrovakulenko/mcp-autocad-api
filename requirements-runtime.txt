@@ -1,0 +1,15 @@
+# MCP Server Runtime Dependencies (minimal)
+# Only needed to run the MCP server after ingestion
+
+# Core MCP protocol
+mcp>=1.0.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Vector search (for loading indices)
+faiss-cpu>=1.7.4
+numpy>=1.24.0
+
+# Lexical search (for loading indices)
+rank-bm25>=0.2.2
