@@ -15,22 +15,15 @@ import argparse
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-# Setup logging
+# Setup logging for errors only
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stderr)  # Log to stderr to avoid interfering with MCP protocol
     ]
 )
 logger = logging.getLogger(__name__)
-
-# Log startup information
-logger.info(f"Starting MCP Server")
-logger.info(f"Python executable: {sys.executable}")
-logger.info(f"Current working directory: {Path.cwd()}")
-logger.info(f"Project root: {project_root}")
-logger.info(f"Python path: {sys.path[:3]}...")  # Show first 3 entries
 
 from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
@@ -55,8 +48,6 @@ class AutoCADMCPServer:
         self.link_graph = None
         self.server = Server("autocad-sdk-mcp")
         
-        logger.info(f"Initializing AutoCADMCPServer with source: {source.value}")
-        logger.info(f"Current working directory: {Path.cwd()}")
         
         self._setup_handlers()
     
@@ -198,8 +189,6 @@ class AutoCADMCPServer:
         k = args.get("k", 10)
         source_str = args.get("source", "arxmgd")
         
-        logger.info(f"Search request: query='{query}', k={k}, source='{source_str}'")
-        
         if not query:
             return [TextContent(type="text", text="Error: Query is required")]
         
@@ -207,72 +196,39 @@ class AutoCADMCPServer:
         
         # Ensure indexer is loaded
         if not self.indexer or self.indexer.source != source:
-            logger.info(f"Loading indexer for source: {source.value}")
-            logger.info(f"Current working directory: {Path.cwd()}")
-            
             # Check if index files exist - use absolute path from project root
             index_dir = project_root / "data" / "index" / source.value
             faiss_path = index_dir / "faiss.index"
             bm25_path = index_dir / "bm25.pkl"
             
-            logger.info(f"Looking for index files in: {index_dir.absolute()}")
-            logger.info(f"FAISS index path: {faiss_path.absolute()}")
-            logger.info(f"BM25 index path: {bm25_path.absolute()}")
-            logger.info(f"FAISS index exists: {faiss_path.exists()}")
-            logger.info(f"BM25 index exists: {bm25_path.exists()}")
-            
-            # List directory contents for debugging
-            if index_dir.exists():
-                logger.info(f"Index directory contents: {list(index_dir.iterdir())}")
-            else:
-                logger.error(f"Index directory does not exist: {index_dir.absolute()}")
+            if not index_dir.exists():
                 error_msg = (
                     f"Error: Index directory does not exist at {index_dir.absolute()}\n"
-                    f"Project root: {project_root.absolute()}\n"
-                    f"Expected path: {index_dir.absolute()}\n"
                     f"Please run the ingestion process to create the index files."
                 )
                 return [TextContent(type="text", text=error_msg)]
             
             if not faiss_path.exists():
-                logger.error(f"FAISS index not found at: {faiss_path.absolute()}")
-                logger.error(f"Project root: {project_root.absolute()}")
-                logger.error(f"Index dir: {index_dir.absolute()}")
                 error_msg = (
                     f"Error: FAISS index not found at {faiss_path.absolute()}\n"
-                    f"Project root: {project_root.absolute()}\n"
-                    f"Index directory: {index_dir.absolute()}\n"
                     f"Please run the ingestion process to create the index files."
                 )
                 return [TextContent(type="text", text=error_msg)]
             
             if not bm25_path.exists():
-                logger.error(f"BM25 index not found at: {bm25_path.absolute()}")
-                logger.error(f"Project root: {project_root.absolute()}")
-                logger.error(f"Index dir: {index_dir.absolute()}")
                 error_msg = (
                     f"Error: BM25 index not found at {bm25_path.absolute()}\n"
-                    f"Project root: {project_root.absolute()}\n"
-                    f"Index directory: {index_dir.absolute()}\n"
                     f"Please run the ingestion process to create the index files."
                 )
                 return [TextContent(type="text", text=error_msg)]
             
             try:
                 self.indexer = HybridIndexer(source=source)
-                logger.info("Created HybridIndexer instance")
                 self.indexer.load_indices()
-                logger.info("Successfully loaded indices")
             except Exception as e:
                 logger.error(f"Failed to load indices: {e}")
-                import traceback
-                logger.error(traceback.format_exc())
                 error_msg = (
                     f"Error loading indices: {str(e)}\n"
-                    f"Project root: {project_root.absolute()}\n"
-                    f"Index directory: {index_dir.absolute()}\n"
-                    f"FAISS path: {faiss_path.absolute()}\n"
-                    f"BM25 path: {bm25_path.absolute()}\n"
                     f"Please check that the index files exist and are accessible."
                 )
                 return [TextContent(type="text", text=error_msg)]
@@ -312,7 +268,6 @@ class AutoCADMCPServer:
         
         # Ensure indexer is loaded
         if not self.indexer or self.indexer.source != source:
-            logger.info(f"Loading indexer for source: {source.value} (get request)")
             self.indexer = HybridIndexer(source=source)
             self.indexer.load_indices()
         
@@ -373,7 +328,6 @@ class AutoCADMCPServer:
         
         # Ensure indexer is loaded
         if not self.indexer or self.indexer.source != source:
-            logger.info(f"Loading indexer for source: {source.value} (neighbors request)")
             self.indexer = HybridIndexer(source=source)
             self.indexer.load_indices()
         
@@ -494,14 +448,8 @@ async def main():
     
     args = parser.parse_args()
     
-    logger.info(f"Starting MCP server with arguments: {args}")
-    logger.info(f"Current working directory: {Path.cwd()}")
-    
     source = SourceType(args.source)
-    logger.info(f"Using source: {source.value}")
-    
     server = AutoCADMCPServer(source=source)
-    logger.info("Server initialized, starting MCP protocol...")
     
     await server.run()
 
