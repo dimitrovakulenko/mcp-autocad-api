@@ -82,6 +82,15 @@ python -m server.mcp_server
 python -m server.mcp_server --source arxdev
 ```
 
+## Example Queries
+
+Here are example queries that AI agents can use:
+
+- **"What class represents a revision cloud?"**
+- **"What are the ways to construct AcDbArc?"**
+- **"What methods are available on AcDbBlockReference?"**
+- **"How does AcDbDimension store information about text size?"**
+
 ## MCP Tools
 
 The server exposes the following tools:
@@ -129,15 +138,6 @@ List available CHM documentation sources.
 
 ### `docs.health`
 Get server health and version information.
-
-## Example Queries
-
-Here are example queries that AI agents can use:
-
-- **"What class represents a revision cloud?"**
-- **"What are the ways to construct AcDbArc?"**
-- **"What methods are available on AcDbBlockReference?"**
-- **"How does AcDbDimension store information about text size?"**
 
 ## Project Structure
 
