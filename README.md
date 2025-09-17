@@ -179,23 +179,6 @@ Default chunking parameters:
 
 These can be modified in `ingester/chunker.py`.
 
-## Development
-
-### Adding New CHM Sources
-
-1. Add the CHM file to `data/chm/`
-2. Update `SourceType` enum in `ingester/models.py`
-3. Add the file mapping in `CHMIngestionPipeline.chm_files`
-4. Re-run ingestion
-
-### Extending Search Capabilities
-
-The hybrid search system can be extended by:
-- Modifying the RRF (Reciprocal Rank Fusion) algorithm
-- Adding new embedding models
-- Implementing custom scoring functions
-- Adding domain-specific preprocessing
-
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
