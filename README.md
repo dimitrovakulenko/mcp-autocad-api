@@ -1,17 +1,6 @@
 # AutoCAD Documentation MCP Server
 
-An MCP (Model Context Protocol) server that exposes Autodesk AutoCAD documentation stored in CHM files, enabling AI agents to query and retrieve structured documentation content.
-
-## Overview
-
-This project provides a complete pipeline for:
-- **CHM Extraction**: Extract CHM files using 7-zip to HTML
-- **TOC/Index Parsing**: Parse HHC/HHK files for structure and navigation
-- **Topic Parsing**: Extract and clean HTML content with BeautifulSoup
-- **Link Graph**: Build parent/children/see_also relationships
-- **Intelligent Chunking**: Split long pages into heading-aware chunks (~800-1200 tokens)
-- **Hybrid Search**: Combine semantic (FAISS) and lexical (BM25) search with Reciprocal Rank Fusion
-- **MCP Server**: Expose search capabilities through standardized MCP tools
+An MCP (Model Context Protocol) server that exposes Autodesk AutoCAD SDK documentation taken from CHM files distributed together with the official Autodesk Autocad SDK documenation, enabling AI agents to query and retrieve structured documentation content.
 
 ## Architecture
 
@@ -40,8 +29,8 @@ CHM Files → 7-zip → HTML → Parser → Chunker → Indexer → MCP Server �
 
 2. **Install dependencies**:
    ```bash
-   # For ingestion (heavy dependencies)
-   pip install -r requirements-ingestion.txt
+   # For ingestion (heavy dependencies)   
+   pip install -r requirements-ingestion.txt # (sorry it is dirty)
    
    # OR for runtime only (lightweight)
    pip install -r requirements-runtime.txt
@@ -207,37 +196,10 @@ The hybrid search system can be extended by:
 - Implementing custom scoring functions
 - Adding domain-specific preprocessing
 
-## Troubleshooting
-
-### Common Issues
-
-1. **CHM files not found**: Ensure CHM files are in `data/chm/` directory
-2. **Index not found**: Run the ingestion pipeline first
-3. **Import errors**: Install all dependencies with `pip install -r requirements.txt`
-4. **MCP server not connecting**: Check MCP client configuration and file paths
-
-### Performance Tips
-
-- Use SSD storage for better index performance
-- Consider using GPU-accelerated FAISS for large indices
-- Adjust chunk size based on your use case
-- Use source filtering to limit search scope
-
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-## Contributing
+## Need MCP Server for your business ?
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## Support
-
-For issues and questions:
-1. Check the troubleshooting section
-2. Review the test queries for examples
-3. Open an issue with detailed error information
+Contact me: https://dmytro-prototypes.net/
